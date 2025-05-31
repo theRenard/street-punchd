@@ -1,7 +1,7 @@
 -- enable extended map
 -- poke(0x5f56, 0x80)
 
-debug = 1
+debug = 0
 
 function _init()
 	cls()
@@ -24,10 +24,10 @@ end
 function _draw()
 	cls(1)
 
-	-- draw_background()
-	-- draw_buildings()
-	-- draw_street()
-	-- draw_home()
+	draw_background()
+	draw_buildings()
+	draw_street()
+	draw_home()
 	draw_player()
 	draw_cyclists()
 	draw_objects()

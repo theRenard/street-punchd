@@ -1,6 +1,7 @@
 p = {}
-local b = { 20, 5, 110, 115 }
+local b = { 20, 50, 110, 115 }
 p_sprite = { 0, 16, 32, 48 }
+sprite_speed = 0.2
 
 function init_player()
   p.x = 60
@@ -12,7 +13,7 @@ function init_player()
   p.m = 0
   p.f = 0
   p.d = 1
-  p.s = 1.2
+  p.s = 1
   p.z = 0
   -- Collision box (smaller than sprite)
   p.cx = 0
@@ -61,8 +62,8 @@ function update_player()
   if btn(⬅️) or btn(➡️) or
      ((btn(⬆️) and can_move_up) or
       (btn(⬇️) and can_move_down)) then
-    p.f += 0.2
-    if p.f >= 4 then p.f = 0 end
+    p.f += sprite_speed
+    if p.f >= #p_sprite then p.f = 0 end
   else
     p.f = 0
   end
@@ -72,9 +73,6 @@ function update_player()
   local right_edge = p.x + p.cx + p.cw
   local is_horizontal = btn(⬅️) or btn(➡️)
   speed = ((left_edge <= b[1] or right_edge >= b[3]) and is_horizontal) and (0.40 * p.d) or 0
-  if debug == 1 then
-    print(speed)
-  end
 
   -- Draw player
   local flip = p.d ~= 1
@@ -96,13 +94,6 @@ function draw_player()
     line(b[1], b[2], b[3], b[2], 7) -- Top horizontal
     line(b[1], b[4], b[3], b[4], 7) -- Bottom horizontal
   end
-
-  pq(p.sx)
-
-  -- change trousers color from yellow to black
-  -- pal(9, 0)
-  -- sspr(s.x, s.y, s.w, s.h, p.x, p.y, s.w, s.h, flip)
-  -- pal(9, 9)
 
   -- Draw collision box on top
   if debug == 1 then
