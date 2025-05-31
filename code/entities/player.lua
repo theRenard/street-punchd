@@ -1,6 +1,6 @@
 p = {}
-b = { 20, 5, 110, 115 }
-s = { 0, 16, 32, 48 }
+local b = { 20, 5, 110, 115 }
+p_sprite = { 0, 16, 32, 48 }
 
 function init_player()
   p.x = 60
@@ -22,6 +22,8 @@ function init_player()
   p.cw = 16
   -- collision width
   p.ch = 28
+  p.sx = 0
+  p.col = { 9, 0 }
   -- collision height
   add_object(p)
 end
@@ -59,8 +61,8 @@ function update_player()
   if btn(⬅️) or btn(➡️) or
      ((btn(⬆️) and can_move_up) or
       (btn(⬇️) and can_move_down)) then
-    p.f += 0.25
-    if p.f > 3 then p.f = 0 end
+    p.f += 0.2
+    if p.f >= 4 then p.f = 0 end
   else
     p.f = 0
   end
@@ -79,7 +81,7 @@ function update_player()
   p.y = flr(p.y)
 
   p.flip = flip
-  p.sx = s[flr(p.f) + 1]
+  p.sx = p_sprite[flr(p.f) + 1]
   p.sy = 0
   p.sw = 16
   p.sh = 32
@@ -95,7 +97,7 @@ function draw_player()
     line(b[1], b[4], b[3], b[4], 7) -- Bottom horizontal
   end
 
-  print(p.z, 0, 0, 7)
+  pq(p.sx)
 
   -- change trousers color from yellow to black
   -- pal(9, 0)
