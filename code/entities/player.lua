@@ -1,6 +1,6 @@
 p = {}
 p_sprite = { 0, 16, 32, 48 }
-sprite_speed = 0.2
+ani_spd = 0.25
 
 function init_player()
   p.x = 60
@@ -61,7 +61,7 @@ function update_player()
   if btn(⬅️) or btn(➡️) or
      ((btn(⬆️) and can_move_up) or
       (btn(⬇️) and can_move_down)) then
-    p.f += sprite_speed
+    p.f += ani_spd
     if p.f >= #p_sprite then p.f = 0 end
   else
     p.f = 0
@@ -75,14 +75,13 @@ function update_player()
 
   -- Draw player
   local flip = p.d ~= 1
-  p.y = flr(p.y)
 
   p.flip = flip
   p.sx = p_sprite[flr(p.f) + 1]
   p.sy = 0
   p.sw = 16
   p.sh = 32
-  p.z = p.y + p.h
+  p.z = flr(p.y + p.h)
 end
 
 function draw_player()
