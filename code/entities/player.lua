@@ -1,5 +1,4 @@
 p = {}
-local b = { 20, 50, 110, 115 }
 p_sprite = { 0, 16, 32, 48 }
 sprite_speed = 0.2
 
@@ -35,10 +34,10 @@ function update_player()
   p.m = 0
 
   -- Check if movement is possible in each direction
-  local can_move_up = p.y + p.cy > b[2]
-  local can_move_down = p.y + p.cy + p.ch < b[4]
-  local can_move_left = p.x + p.cx > b[1]
-  local can_move_right = p.x + p.cx + p.cw < b[3]
+  local can_move_up = p.y + p.cy > boundaries[2]
+  local can_move_down = p.y + p.cy + p.ch < boundaries[4]
+  local can_move_left = p.x + p.cx > boundaries[1]
+  local can_move_right = p.x + p.cx + p.cw < boundaries[3]
 
   -- Movement input with collision box bounds
   if (btn(⬆️) and can_move_up) p.dy -= p.s
@@ -72,7 +71,7 @@ function update_player()
   local left_edge = p.x + p.cx
   local right_edge = p.x + p.cx + p.cw
   local is_horizontal = btn(⬅️) or btn(➡️)
-  speed = ((left_edge <= b[1] or right_edge >= b[3]) and is_horizontal) and (0.40 * p.d) or 0
+  speed = ((left_edge <= boundaries[1] or right_edge >= boundaries[3]) and is_horizontal) and (0.40 * p.d) or 0
 
   -- Draw player
   local flip = p.d ~= 1
@@ -89,10 +88,10 @@ end
 function draw_player()
   -- Draw boundary lines
   if debug == 1 then
-    line(b[1], b[2], b[1], b[4], 7) -- Left vertical
-    line(b[3], b[2], b[3], b[4], 7) -- Right vertical
-    line(b[1], b[2], b[3], b[2], 7) -- Top horizontal
-    line(b[1], b[4], b[3], b[4], 7) -- Bottom horizontal
+    line(boundaries[1], boundaries[2], boundaries[1], boundaries[4], 7) -- Left vertical
+    line(boundaries[3], boundaries[2], boundaries[3], boundaries[4], 7) -- Right vertical
+    line(boundaries[1], boundaries[2], boundaries[3], boundaries[2], 7) -- Top horizontal
+    line(boundaries[1], boundaries[4], boundaries[3], boundaries[4], 7) -- Bottom horizontal
   end
 
   -- Draw collision box on top
