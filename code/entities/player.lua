@@ -31,6 +31,7 @@ function init_player()
   -- collision width
   p.ch = 5
   p.sx = 0
+  p.energy = 100
   p.col = { 9, 0 }
   -- collision height
   add_object(p)
@@ -115,6 +116,9 @@ function update_player()
 
   if collision then
     p.col = { 14, 0 }
+    if p.energy > 0 then
+      p.energy -= 1
+    end
   else
     p.col = { 9, 0 }
   end

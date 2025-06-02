@@ -1,53 +1,31 @@
--- Status UI element (Player Energy)
-status = {
-  x = 4,
-  y = 120,
-  w = 100,  -- 10 segments * 10 pixels
-  h = 8,   -- 10 pixels height
-  col = 7,
-  segments = 10,
-  current_segments = 10,
-  segment_width = 3,
-  segment_gap = 0
-}
-
 function update_status()
-  -- Update segments based on collision
-  if collision and not status.collision_handled then
-    status.current_segments = max(0, status.current_segments - 1)
-    status.collision_handled = true
-  elseif not collision then
-    status.collision_handled = false
-  end
-
-  -- Update color based on segments
-  if status.current_segments <= 2 then
-    status.col = 14  -- Red when low energy
-  elseif status.current_segments <= 5 then
-    status.col = 8   -- Orange when medium energy
-  else
-    status.col = 7   -- White when high energy
-  end
 end
 
 function draw_status()
-  -- Draw background
-  rect(status.x, status.y, status.x + status.w, status.y + status.h, 0)
+  local x0 = 4 -- leftmost
+  local pw = 15
+  local bw = 50
+  local bh = 6
+  local x1 = x0 + pw + 2 -- middle
+  local x3 = 90 -- end
 
-  -- Draw segments
-  local current_x = status.x
-  for i = 1, status.segments do
-    if i <= status.current_segments then
-      rect(current_x, status.y, current_x + status.segment_width, status.y + status.h, status.col)
-    end
-    current_x += status.segment_width + status.segment_gap
-  end
-end
+  local y0 = 4
 
-function add_segment()
-  status.current_segments = min(status.segments, status.current_segments + 1)
-end
+  -- portrait
+  rectfill(x0, y0, x0 + pw, y0 + pw, 7)
+  rectfill(x0 + 1, y0 + 1, x0 + pw - 1, y0 + pw - 1, 8)
+  sspr(x0 + 1, y0 + 1, pw - 2, pw - 2, x0 + 1, y0 + 1, pw - 1, pw - 1)
 
-function remove_segment()
-  status.current_segments = max(0, status.current_segments - 1)
+  -- name
+  -- print("jEAN", x1 + 1, y0 + 16, 7)
+
+  -- -- energy
+  print("jEAN", x1 + 1, y0 + 3, 7)
+  rect(x1, y0 + bh + 3, x1 + bw, y0 + bh * 2 + 3, 7)
+  rectfill(x1 + 1, y0 + bh + 4, x1 + bw - 1, y0 + bh * 2 + 2, 8)
+
+  -- energy bar
+  local energy = p.energy
+  local energy_bar_width = bw * (energy / 100)
+  rectfill(x1 + 1, y0 + bh + 4, x1 + energy_bar_width - 1, y0 + bh * 2 + 2, 10)
 end
