@@ -4,8 +4,8 @@ end
 function draw_status()
   local x0 = 4 -- leftmost
   local pw = 15
-  local bw = 50
-  local bh = 6
+  local bw = 40
+  local bh = 4
   local x1 = x0 + pw + 2 -- middle
   local x3 = 90 -- end
 
@@ -21,11 +21,12 @@ function draw_status()
 
   -- -- energy
   print("jEAN", x1 + 1, y0 + 3, 7)
-  rect(x1, y0 + bh + 3, x1 + bw, y0 + bh * 2 + 3, 7)
-  rectfill(x1 + 1, y0 + bh + 4, x1 + bw - 1, y0 + bh * 2 + 2, 8)
+  rect(x1, y0 + bh + 5, x1 + bw, y0 + bh * 2 + 5, 7)
+  rectfill(x1 + 1, y0 + bh + 6, x1 + bw - 1, y0 + bh * 2 + 4, 8)
 
   -- energy bar
   local energy = p.energy
-  local energy_bar_width = bw * (energy / 100)
-  rectfill(x1 + 1, y0 + bh + 4, x1 + energy_bar_width - 1, y0 + bh * 2 + 2, 10)
+  local energy_bar_width = ceil(bw * (energy / 100))
+  energy_bar_width = mid(0, energy_bar_width, bw - 2)
+  rectfill(x1 + 1, y0 + bh + 6, x1 + 1 + energy_bar_width, y0 + bh * 2 + 4, 10)
 end
