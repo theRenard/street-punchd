@@ -1,6 +1,7 @@
 p = {}
 p_sprite = { 0, 16, 32, 48 }
 ani_spd = 0.25
+collision = false
 
 function init_player()
   p.x = 60
@@ -15,13 +16,20 @@ function init_player()
   p.s = 1
   p.z = 0
   -- Collision box (smaller than sprite)
+  p.mx = 0
+  -- x offset from sprite
+  p.my = 4
+  -- y offset from sprite
+  p.mw = 16
+  -- collision width
+  p.mh = 28
   p.cx = 0
   -- x offset from sprite
-  p.cy = 4
+  p.cy = 27
   -- y offset from sprite
   p.cw = 16
   -- collision width
-  p.ch = 28
+  p.ch = 5
   p.sx = 0
   p.col = { 9, 0 }
   -- collision height
@@ -34,10 +42,32 @@ function update_player()
   p.m = 0
 
   -- Check if movement is possible in each direction
-  local can_move_up = p.y + p.cy > boundaries[2]
-  local can_move_down = p.y + p.cy + p.ch < boundaries[4]
-  local can_move_left = p.x + p.cx > boundaries[1]
-  local can_move_right = p.x + p.cx + p.cw < boundaries[3]
+  local can_move_up = p.y + p.my > boundaries[2]
+  local can_move_down = p.y + p.my + p.mh < boundaries[4]
+  local can_move_left = p.x + p.mx > boundaries[1]
+  local can_move_right = p.x + p.mx + p.mw < boundaries[3]
+
+  -- Check collision with cyclist
+  local player_collision = {
+    x = p.x + p.cx,
+    y = p.y + p.cy,
+    w = p.cw,
+    h = p.ch
+  }
+
+  local cyclist_collision = {
+    x = c.x + c.cx,
+    y = c.y + c.cy,
+    w = c.cw,
+    h = c.ch
+  }
+
+  -- Check if collision boxes overlap
+  collision =
+    player_collision.x < cyclist_collision.x + cyclist_collision.w and
+    player_collision.x + player_collision.w > cyclist_collision.x and
+    player_collision.y < cyclist_collision.y + cyclist_collision.h and
+    player_collision.y + player_collision.h > cyclist_collision.y
 
   -- Movement input with collision box bounds
   if (btn(⬆️) and can_move_up) p.dy -= p.s
@@ -68,8 +98,8 @@ function update_player()
   end
 
   -- Update speed based on collision box hitting left/right boundaries and horizontal movement
-  local left_edge = p.x + p.cx
-  local right_edge = p.x + p.cx + p.cw
+  local left_edge = p.x + p.mx
+  local right_edge = p.x + p.mx + p.mw
   local is_horizontal = btn(⬅️) or btn(➡️)
   speed = ((left_edge <= boundaries[1] or right_edge >= boundaries[3]) and is_horizontal) and (0.40 * p.d) or 0
 
@@ -82,6 +112,13 @@ function update_player()
   p.sw = 16
   p.sh = 32
   p.z = flr(p.y + p.h)
+
+  if collision then
+    p.col = { 14, 0 }
+  else
+    p.col = { 9, 0 }
+  end
+
 end
 
 function draw_player()
@@ -95,6 +132,10 @@ function draw_player()
 
   -- Draw collision box on top
   if debug == 1 then
-    rect(p.x + p.cx, p.y + p.cy, p.x + p.cx + p.cw, p.y + p.cy + p.ch, 8)
+    rect(p.x + p.mx, p.y + p.my, p.x + p.mx + p.mw, p.y + p.my + p.mh, 8)
+  end
+
+  if debug == 1 then
+    rect(p.x + p.cx, p.y + p.cy, p.x + p.cx + p.cw, p.y + p.cy + p.ch, collision and 14 or 7)
   end
 end

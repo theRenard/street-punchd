@@ -11,10 +11,11 @@ __lua__
 #include code/entities/home.lua
 #include code/entities/player.lua
 #include code/entities/cyclists.lua
+#include code/ui/status.lua
+#include code/ui/score.lua
 -- #include code/scenes/game.lua
 #include code/entities/building.lua
 #include code/main.lua
--- #include score.lua
 -- #include sounds.lua
 -- #include collisions.lua
 -- #include menu.lua

@@ -20,6 +20,14 @@ function init_cyclists()
   c.col = { 5, 0 }  -- Color palette
   c.flip = false
 
+  c.cx = 3
+  -- x offset from sprite
+  c.cy = 19
+  -- y offset from sprite
+  c.cw = 18
+  -- collision width
+  c.ch = 5
+
   add_object(c)
   reset_cyclists()
 end
@@ -64,5 +72,9 @@ function draw_cyclists()
   -- Debug: Draw collision box
   if debug == 1 then
     rect(c.x, c.y, c.x + c.w, c.y + c.h, 8)
+  end
+
+  if debug == 1 then
+    rect(c.x + c.cx, c.y + c.cy, c.x + c.cx + c.cw, c.y + c.cy + c.ch, 7)
   end
 end

@@ -11,6 +11,7 @@ function _init()
 	init_home()
 	init_player()
 	init_cyclists()
+	reset_score()  -- Initialize score
 end
 
 function _update60()
@@ -19,6 +20,8 @@ function _update60()
 	update_home()
 	update_player()
 	update_cyclists()
+	update_status()
+	update_score()  -- Update score
 end
 
 function _draw()
@@ -28,7 +31,9 @@ function _draw()
 	draw_buildings()
 	draw_street()
 	draw_home()
+	draw_objects()
 	draw_player()
 	draw_cyclists()
-	draw_objects()
+	draw_status()
+	draw_score()  -- Draw score
 end
