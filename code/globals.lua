@@ -1,4 +1,4 @@
-speed = 0
+scroll_speed = 0
 
--- x, y, x1, y1
-boundaries = { 20, 50, 110, 115 }
+-- x0, y0, x1, y1
+walking_boundaries = { 20, 50, 110, 115 }

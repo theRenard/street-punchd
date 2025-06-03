@@ -18,7 +18,7 @@ end
 
 function update_home()
   for i = 1, #homes do
-    homes[i].x -= speed * 1.5
+    homes[i].x -= scroll_speed * 1.5
     if homes[i].x < -(home_width + home_spacing) then
       -- move home to the end of the collection
       homes[i].x = homes[last_index].x + home_width + home_spacing

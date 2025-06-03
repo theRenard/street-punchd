@@ -30,7 +30,7 @@ end
 function update_buildings()
   -- move buildings to the left
   for i = 1, #buildings do
-    buildings[i].x -= speed * 0.3
+    buildings[i].x -= scroll_speed * 0.3
     if buildings[i].x < -20 then
       buildings[i].x = 148 + buildings[i].x
     end

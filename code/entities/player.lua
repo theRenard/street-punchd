@@ -1,126 +1,126 @@
-p = {}
-p_sprite = { 0, 16, 32, 48 }
-ani_spd = 0.25
-collision = false
+player = {}
+player_sprite_frames = { 0, 16, 32, 48 }
+player_animation_speed = 0.25
+player_cyclist_collision = false
 
 function init_player()
-  p.x = 60
-  p.y = 60
-  p.w = 16
-  p.h = 32
-  p.dx = 0
-  p.dy = 0
-  p.m = 0
-  p.f = 0
-  p.d = 1
-  p.s = 1
-  p.z = 0
+  player.x = 60
+  player.y = 60
+  player.width = 16
+  player.height = 32
+  player.velocity_x = 0
+  player.velocity_y = 0
+  player.movement = 0
+  player.frame = 0
+  player.direction = 1
+  player.speed = 1
+  player.z_order = 0
   -- Collision box (smaller than sprite)
-  p.mx = 0
+  player.collision_offset_x = 0
   -- x offset from sprite
-  p.my = 4
+  player.collision_offset_y = 4
   -- y offset from sprite
-  p.mw = 16
+  player.collision_width = 16
   -- collision width
-  p.mh = 28
-  p.cx = 0
+  player.collision_height = 28
+  player.collision_box_offset_x = 0
   -- x offset from sprite
-  p.cy = 27
+  player.collision_box_offset_y = 27
   -- y offset from sprite
-  p.cw = 16
+  player.collision_box_width = 16
   -- collision width
-  p.ch = 5
-  p.sx = 0
-  p.energy = 100
-  p.col = { 9, 0 }
+  player.collision_box_height = 5
+  player.sprite_x = 0
+  player.energy = 100
+  player.palette = { 9, 0 }
   -- collision height
-  add_object(p)
+  add_object(player)
 end
 
 function update_player()
-  p.dx = 0
-  p.dy = 0
-  p.m = 0
+  player.velocity_x = 0
+  player.velocity_y = 0
+  player.movement = 0
 
   -- Check if movement is possible in each direction
-  local can_move_up = p.y + p.my > boundaries[2]
-  local can_move_down = p.y + p.my + p.mh < boundaries[4]
-  local can_move_left = p.x + p.mx > boundaries[1]
-  local can_move_right = p.x + p.mx + p.mw < boundaries[3]
+  local can_move_up = player.y + player.collision_offset_y > walking_boundaries[2]
+  local can_move_down = player.y + player.collision_offset_y + player.collision_height < walking_boundaries[4]
+  local can_move_left = player.x + player.collision_offset_x > walking_boundaries[1]
+  local can_move_right = player.x + player.collision_offset_x + player.collision_width < walking_boundaries[3]
 
   -- Check collision with cyclist
-  local player_collision = {
-    x = p.x + p.cx,
-    y = p.y + p.cy,
-    w = p.cw,
-    h = p.ch
+  local player_collision_box = {
+    x = player.x + player.collision_box_offset_x,
+    y = player.y + player.collision_box_offset_y,
+    w = player.collision_box_width,
+    h = player.collision_box_height
   }
 
-  local cyclist_collision = {
-    x = c.x + c.cx,
-    y = c.y + c.cy,
-    w = c.cw,
-    h = c.ch
+  local cyclist_collision_box = {
+    x = cyclist.x + cyclist.collision_box_offset_x,
+    y = cyclist.y + cyclist.collision_box_offset_y,
+    w = cyclist.collision_box_width,
+    h = cyclist.collision_box_height
   }
 
   -- Check if collision boxes overlap
-  collision =
-    player_collision.x < cyclist_collision.x + cyclist_collision.w and
-    player_collision.x + player_collision.w > cyclist_collision.x and
-    player_collision.y < cyclist_collision.y + cyclist_collision.h and
-    player_collision.y + player_collision.h > cyclist_collision.y
+  player_cyclist_collision =
+    player_collision_box.x < cyclist_collision_box.x + cyclist_collision_box.w and
+    player_collision_box.x + player_collision_box.w > cyclist_collision_box.x and
+    player_collision_box.y < cyclist_collision_box.y + cyclist_collision_box.h and
+    player_collision_box.y + player_collision_box.h > cyclist_collision_box.y
 
   -- Movement input with collision box bounds
-  if (btn(⬆️) and can_move_up) p.dy -= p.s
-  if (btn(⬇️) and can_move_down) p.dy += p.s
-  if (btn(⬅️) and can_move_left) p.dx -= p.s
-  if (btn(➡️) and can_move_right) p.dx += p.s
+  if (btn(⬆️) and can_move_up) player.velocity_y -= player.speed
+  if (btn(⬇️) and can_move_down) player.velocity_y += player.speed
+  if (btn(⬅️) and can_move_left) player.velocity_x -= player.speed
+  if (btn(➡️) and can_move_right) player.velocity_x += player.speed
 
   -- Update direction
-  if p.dx != 0 then
-    p.d = p.dx > 0 and 1 or -1
+  if player.velocity_x != 0 then
+    player.direction = player.velocity_x > 0 and 1 or -1
   end
 
   -- Apply movement
-  if p.dx != 0 or p.dy != 0 then
-    local a = atan2(p.dx, p.dy)
-    p.x += cos(a) * p.s
-    p.y += sin(a) * p.s
+  if player.velocity_x != 0 or player.velocity_y != 0 then
+    local angle = atan2(player.velocity_x, player.velocity_y)
+    player.x += cos(angle) * player.speed
+    player.y += sin(angle) * player.speed
   end
 
   -- Update animation
   if btn(⬅️) or btn(➡️) or
      ((btn(⬆️) and can_move_up) or
       (btn(⬇️) and can_move_down)) then
-    p.f += ani_spd
-    if p.f >= #p_sprite then p.f = 0 end
+    player.frame += player_animation_speed
+    if player.frame >= #player_sprite_frames then player.frame = 0 end
   else
-    p.f = 0
+    player.frame = 0
   end
 
   -- Update speed based on collision box hitting left/right boundaries and horizontal movement
-  local left_edge = p.x + p.mx
-  local right_edge = p.x + p.mx + p.mw
+  local left_edge = player.x + player.collision_offset_x
+  local right_edge = player.x + player.collision_offset_x + player.collision_width
   local is_horizontal = btn(⬅️) or btn(➡️)
-  speed = ((left_edge <= boundaries[1] or right_edge >= boundaries[3]) and is_horizontal) and (0.40 * p.d) or 0
+  scroll_speed = ((left_edge <= walking_boundaries[1] or right_edge >= walking_boundaries[3]) and is_horizontal) and (0.40 * player.direction) or 0
 
   -- Draw player
-  local flip = p.d ~= 1
+  local flip = player.direction ~= 1
 
-  p.flip = flip
-  p.sx = p_sprite[flr(p.f) + 1]
-  p.sy = 0
-  p.sw = 16
-  p.sh = 32
-  p.z = flr(p.y + p.h)
+  player.flip = flip
+  player.sprite_x = player_sprite_frames[flr(player.frame) + 1]
+  player.sprite_y = 0
+  player.sprite_width = 16
+  player.sprite_height = 32
+  player.z_order = flr(player.y + player.height)
 
-  if collision then
-    p.col = { 14, 0 }
-    if p.energy > 0 then
-      p.energy -= 1
+  if player_cyclist_collision then
+    player.palette = { 14, 0 }
+    if player.energy > 0 then
+      player.energy -= 1
     end
   else
-    p.col = { 9, 0 }
+    player.palette = { 9, 0 }
   end
 
 end
@@ -128,18 +128,18 @@ end
 function draw_player()
   -- Draw boundary lines
   if debug == 1 then
-    line(boundaries[1], boundaries[2], boundaries[1], boundaries[4], 7) -- Left vertical
-    line(boundaries[3], boundaries[2], boundaries[3], boundaries[4], 7) -- Right vertical
-    line(boundaries[1], boundaries[2], boundaries[3], boundaries[2], 7) -- Top horizontal
-    line(boundaries[1], boundaries[4], boundaries[3], boundaries[4], 7) -- Bottom horizontal
+    line(walking_boundaries[1], walking_boundaries[2], walking_boundaries[1], walking_boundaries[4], 7) -- Left vertical
+    line(walking_boundaries[3], walking_boundaries[2], walking_boundaries[3], walking_boundaries[4], 7) -- Right vertical
+    line(walking_boundaries[1], walking_boundaries[2], walking_boundaries[3], walking_boundaries[2], 7) -- Top horizontal
+    line(walking_boundaries[1], walking_boundaries[4], walking_boundaries[3], walking_boundaries[4], 7) -- Bottom horizontal
   end
 
   -- Draw collision box on top
   if debug == 1 then
-    rect(p.x + p.mx, p.y + p.my, p.x + p.mx + p.mw, p.y + p.my + p.mh, 8)
+    rect(player.x + player.collision_offset_x, player.y + player.collision_offset_y, player.x + player.collision_offset_x + player.collision_width, player.y + player.collision_offset_y + player.collision_height, 8)
   end
 
   if debug == 1 then
-    rect(p.x + p.cx, p.y + p.cy, p.x + p.cx + p.cw, p.y + p.cy + p.ch, collision and 14 or 7)
+    rect(player.x + player.collision_box_offset_x, player.y + player.collision_box_offset_y, player.x + player.collision_box_offset_x + player.collision_box_width, player.y + player.collision_box_offset_y + player.collision_box_height, player_cyclist_collision and 14 or 7)
   end
 end

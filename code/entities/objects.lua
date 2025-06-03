@@ -1,32 +1,31 @@
-objs = {}
+game_objects = {}
 
-function add_object(obj)
-  add(objs, obj)
+function add_object(game_object)
+  add(game_objects, game_object)
 end
 
-function remove_object(obj)
-  objs = {}
+function remove_object(game_object)
+  game_objects = {}
 end
 
 function clear_objects()
-  objs = {}
+  game_objects = {}
 end
 
 function draw_objects()
-  ordered = {}
-  for obj in all(objs) do
-    ordered[obj.z] = ordered[obj.z] or {} -- ensure table is there
-    add(ordered[obj.z], obj)
+  local ordered_objects = {}
+  for game_object in all(game_objects) do
+    ordered_objects[game_object.z_order] = ordered_objects[game_object.z_order] or {}
+    add(ordered_objects[game_object.z_order], game_object)
   end
-  for i = 0, 127 do
-    -- or whatever your min/max Y is
-    for obj in all(ordered[i]) do
-      if obj.col then
-        pal(obj.col[1], obj.col[2])
+  for z = 0, 127 do
+    for game_object in all(ordered_objects[z]) do
+      if game_object.palette then
+        pal(game_object.palette[1], game_object.palette[2])
       end
-      sspr(obj.sx, obj.sy, obj.sw, obj.sh, obj.x, obj.y, obj.sw, obj.sh, obj.flip)
-      if obj.col then
-        pal(obj.col[1], obj.col[1])
+      sspr(game_object.sprite_x, game_object.sprite_y, game_object.sprite_width, game_object.sprite_height, game_object.x, game_object.y, game_object.sprite_width, game_object.sprite_height, game_object.flip)
+      if game_object.palette then
+        pal(game_object.palette[1], game_object.palette[1])
       end
     end
   end

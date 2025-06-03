@@ -11,7 +11,7 @@ __lua__
 #include code/entities/home.lua
 #include code/entities/player.lua
 #include code/entities/cyclists.lua
-#include code/ui/status.lua
+#include code/ui/top_bars.lua
 #include code/ui/score.lua
 -- #include code/scenes/game.lua
 #include code/entities/building.lua

@@ -21,13 +21,13 @@ end
 function update_street()
   -- move the dotted lines to the left
   for i = 0, #lines do
-    lines[i].x -= speed * 1.5
+    lines[i].x -= scroll_speed * 1.5
     if lines[i].x < -32 then
       lines[i].x = 128
     end
   end
   -- move the street to the right
-  -- street.x -= speed * 1.5
+  -- street.x -= scroll_speed * 1.5
   -- if street.x < -128 then
   --   street.x = 0
   -- end
