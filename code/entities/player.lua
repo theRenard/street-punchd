@@ -2,6 +2,7 @@ player = {}
 player_sprite_frames = { 0, 16, 32, 48 }
 player_animation_speed = 0.25
 player_cyclist_collision = false
+btn_pressed = false
 
 function init_player()
   player.x = 60
@@ -15,6 +16,8 @@ function init_player()
   player.direction = 1
   player.speed = 1
   player.z_order = 0
+  player.is_attacking = false
+  player.attack_timer = 0
   -- Collision box (smaller than sprite)
   player.collision_offset_x = 0
   -- x offset from sprite
@@ -76,6 +79,23 @@ function update_player()
   if (btn(⬅️) and can_move_left) player.velocity_x -= player.speed
   if (btn(➡️) and can_move_right) player.velocity_x += player.speed
 
+  if btn(❎) and not player.is_attacking and not btn_pressed then
+    player.is_attacking = true
+    btn_pressed = true
+  end
+
+  if not btn(❎) then
+    btn_pressed = false
+  end
+
+  if player.is_attacking then
+    player.attack_timer += 1
+    if player.attack_timer >= 10 then
+      player.is_attacking = false
+      player.attack_timer = 0
+    end
+  end
+
   -- Update direction
   if player.velocity_x != 0 then
     player.direction = player.velocity_x > 0 and 1 or -1
@@ -120,7 +140,11 @@ function update_player()
       player.energy -= 1
     end
   else
-    player.palette = { 9, 0 }
+    if player.is_attacking then
+      player.palette = { 9, 8 }
+    else
+      player.palette = { 9, 0 }
+    end
   end
 
 end
