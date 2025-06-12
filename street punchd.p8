@@ -13,6 +13,8 @@ __lua__
 #include code/entities/cyclists.lua
 #include code/ui/top_bars.lua
 #include code/ui/score.lua
+#include code/particles.lua
+
 -- #include code/scenes/game.lua
 #include code/entities/building.lua
 #include code/main.lua

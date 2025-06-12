@@ -8,6 +8,7 @@ function draw_top_bars()
   local bar_height = 4
   local screen_width = 128
   local bar_margin = 2
+  map()
 
   -- Player (left)
   local player_x = margin

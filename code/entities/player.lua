@@ -147,6 +147,10 @@ function update_player()
     end
   end
 
+  -- Create dust particles when player is moving
+  if (player.velocity_x != 0 or player.velocity_y != 0) and rnd(100) < 15 then
+    create_dust(player.x + randfloat(-4, 4), player.y + player.height - 2, 1)
+  end
 end
 
 function draw_player()

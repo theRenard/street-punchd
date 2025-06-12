@@ -61,6 +61,13 @@ function update_cyclists()
 
   -- Update z-order for proper drawing
   cyclist.z_order = cyclist.y + cyclist.height
+
+  -- Create dust particles behind the cyclist when moving
+  if rnd(100) < 20 then
+    -- Position dust behind the cyclist based on their direction
+    local dust_x = cyclist.x + (cyclist.direction == 1 and -8 or cyclist.width + 8)
+    create_dust(dust_x + randfloat(-3, 3), cyclist.y + cyclist.height - 2, 1)
+  end
 end
 
 function draw_cyclists()
